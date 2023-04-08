@@ -1,5 +1,5 @@
-import { ReadonlyDeep } from "type-fest";
-import { OpenAPIV3 as OpenAPI } from "openapi-types";
+import { ReadonlyDeep } from 'type-fest';
+import { OpenAPIV3 as OpenAPI } from 'openapi-types';
 
 export type Doc = ReadonlyDeep<OpenAPI.Document>;
 export type Path = ReadonlyDeep<OpenAPI.PathItemObject>;
