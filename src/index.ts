@@ -2,16 +2,20 @@ import { Call, Fn, Objects, Pipe, Tuples } from 'hotscript';
 import { DecayNever } from './decay-never';
 import { Doc, Operation } from './openapi.types';
 
-interface FilterByIn<IN extends string> extends Fn {
-  return: this['arg0']['in'] extends IN ? true : false;
+interface PropEquals<prop extends string, value> extends Fn {
+  return: this['arg0'][prop] extends value ? true : false;
 }
 
-type OnlyParamsIn<IN extends 'path' | 'query', T> = Call<
-  Tuples.Filter<FilterByIn<IN>>,
+type FilterIn<pathOrQuery extends 'path' | 'query', T> = Call<
+  Tuples.Filter<PropEquals<'in', pathOrQuery>>,
   T
-> extends []
-  ? never
-  : Call<Tuples.Filter<FilterByIn<IN>>, T>;
+>;
+
+type IfEmptyNever<T extends any[]> = T extends [] ? never : T;
+
+type OnlyParamsIn<pathOrQuery extends 'path' | 'query', Params> = IfEmptyNever<
+  FilterIn<pathOrQuery, Params>
+>;
 
 // { name: "petId", scheme: { type: "number" } => { petId: number }
 interface GetArgumentAndType extends Fn {
